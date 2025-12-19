@@ -147,21 +147,21 @@ class QwenImage(torch.nn.Module):
 
         self.aux_time_embed = aux_time_embed
     
-        if aux_time_embed:
-            with temp_patch_module_attr("diffusers", "QwenImageTransformer2DModel", QwenImageTransformer2DModelWrapper):
-                transformer_cls = QwenImageTransformer2DModelWrapper
-        else:
-            transformer_cls = QwenImageTransformer2DModel
-        if dit_path is not None:
-            qwen_transformer = transformer_cls.from_single_file(dit_path,config=os.path.join(model_id, "transformer"),torch_dtype=torch.bfloat16)  
-        elif gguf_path is not None:
-            qwen_transformer = transformer_cls.from_single_file(
-                gguf_path,
-                config=os.path.join(model_id, "transformer"),
-                quantization_config=GGUFQuantizationConfig(compute_dtype=torch.bfloat16),
-                torch_dtype=torch.bfloat16,) 
-        else:
-            raise ValueError("Please provide either dit_path or gguf_path")
+        #if aux_time_embed:
+        with temp_patch_module_attr("diffusers", "QwenImageTransformer2DModel", QwenImageTransformer2DModelWrapper):
+            #         transformer_cls = QwenImageTransformer2DModelWrapper
+            # else:
+            #     transformer_cls = QwenImageTransformer2DModel
+            if dit_path is not None:
+                qwen_transformer = QwenImageTransformer2DModelWrapper.from_single_file(dit_path,config=os.path.join(model_id, "transformer"),torch_dtype=torch.bfloat16)  
+            elif gguf_path is not None:
+                qwen_transformer = QwenImageTransformer2DModelWrapper.from_single_file(
+                    gguf_path,
+                    config=os.path.join(model_id, "transformer"),
+                    quantization_config=GGUFQuantizationConfig(compute_dtype=torch.bfloat16),
+                    torch_dtype=torch.bfloat16,) 
+            else:
+                raise ValueError("Please provide either dit_path or gguf_path")
             
         # qwen_transformer = transformer_cls.from_pretrained(
         #     model_id,

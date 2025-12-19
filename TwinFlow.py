@@ -135,7 +135,8 @@ class TwinFlow_SM_KSampler(io.ComfyNode):
         if len(demox.shape)!=5:
             demox=demox.unsqueeze(0)
         out={"samples":demox} #BCTHW
-        model.transformer.transformer.to("cpu")
+        if block_num==0:
+            model.transformer.transformer.to("cpu")
         return io.NodeOutput(out)
 
 from aiohttp import web

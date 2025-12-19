@@ -4,4 +4,4 @@ transformers
 tokenizers
 tqdm
 gguf
-
+omegaconf
